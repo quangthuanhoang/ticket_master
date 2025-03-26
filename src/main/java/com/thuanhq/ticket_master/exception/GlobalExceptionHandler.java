@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.thuanhq.ticket_master.dto.response.APIResponse;
 
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
                 .message(errorCode.getMessage())
                 .build();
 
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(response);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -47,6 +48,19 @@ public class GlobalExceptionHandler {
                 .message(errorCode.getMessage())
                 .build();
 
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    public ResponseEntity<APIResponse> exceptionValidationHandler(NoResourceFoundException exception) {
+
+        ErrorCode errorCode = ErrorCode.NOT_FOUND;
+
+        APIResponse response = APIResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
+
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(response);
     }
 }

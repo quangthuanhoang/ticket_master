@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class PageResponse<T> {
     @Builder.Default
     List<T> data = Collections.emptyList();
+
     int currentPage;
     int pageSize;
     int totalPages;

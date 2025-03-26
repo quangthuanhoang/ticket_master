@@ -1,35 +1,23 @@
 package com.thuanhq.ticket_master.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum ErrorCode {
-    UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception"),
-    INVALID_MESSAGE_KEY(1001, "Invalid message key"),
-    USER_EXISTED(1002, "User is existed!"),
-    USERNAME_INVALID(1003, "Username must be least 3 characters"),
-    PASSWORD_INVALID(1004, "Password must be least 8 characters"),
-    USER_NOT_EXISTED(1005, "User not existed"),
-    ;
+    UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_MESSAGE_KEY(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
+    USER_EXISTED(1002, "User is existed!", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1003, "Username must be least 3 characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(1004, "Password must be least 8 characters", HttpStatus.BAD_REQUEST),
+    USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),
+    NOT_FOUND(404, "404 not found", HttpStatus.NOT_FOUND);
 
     private int code;
     private String message;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    ErrorCode(int code, String message) {
-        this.code = code;
-        this.message = message;
-    }
+    private HttpStatusCode httpStatusCode;
 }

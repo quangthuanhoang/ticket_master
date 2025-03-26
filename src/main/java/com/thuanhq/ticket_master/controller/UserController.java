@@ -13,7 +13,7 @@ import com.thuanhq.ticket_master.dto.response.user.UserResponse;
 import com.thuanhq.ticket_master.service.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/admin/users")
 public class UserController {
     @Autowired
     private UserService userService;

@@ -1,19 +1,17 @@
 package com.thuanhq.ticket_master.common;
 
-import com.thuanhq.ticket_master.dto.response.user.PageResponse;
+import java.util.function.Function;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.function.Function;
+import com.thuanhq.ticket_master.dto.response.user.PageResponse;
 
 public class PagingUtils {
 
-    public static <E, R> PageResponse<R> toPageResponse(
-            Page<E> entityPage,
-            Function<E, R> mapper
-    ) {
+    public static <E, R> PageResponse<R> toPageResponse(Page<E> entityPage, Function<E, R> mapper) {
         return PageResponse.<R>builder()
                 .currentPage(entityPage.getNumber())
                 .pageSize(entityPage.getSize())
