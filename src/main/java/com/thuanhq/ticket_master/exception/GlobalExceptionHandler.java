@@ -12,10 +12,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<APIResponse> exceptionHandler(Exception exception) {
-        APIResponse response = new APIResponse();
-
-        response.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        response.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+        APIResponse response = APIResponse.builder()
+                .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())
+                .message(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage())
+                .build();
 
         return ResponseEntity.badRequest().body(response);
     }
@@ -23,10 +23,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = ApplicationException.class)
     public ResponseEntity<APIResponse> exceptionApplicationHandler(ApplicationException exception) {
         ErrorCode errorCode = exception.getErrorCode();
-        APIResponse response = new APIResponse();
-
-        response.setCode(errorCode.getCode());
-        response.setMessage(errorCode.getMessage());
+        APIResponse response = APIResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
 
         return ResponseEntity.badRequest().body(response);
     }
@@ -42,10 +42,10 @@ public class GlobalExceptionHandler {
 
         }
 
-        APIResponse response = new APIResponse();
-
-        response.setCode(errorCode.getCode());
-        response.setMessage(errorCode.getMessage());
+        APIResponse response = APIResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
 
         return ResponseEntity.badRequest().body(response);
     }
