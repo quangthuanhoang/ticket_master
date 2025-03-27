@@ -1,12 +1,22 @@
 package com.thuanhq.ticket_master.service;
 
+import java.util.HashSet;
+
+import com.thuanhq.ticket_master.repository.RoleRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.thuanhq.ticket_master.common.PagingUtils;
+import com.thuanhq.ticket_master.constant.PredefinedRole;
 import com.thuanhq.ticket_master.dto.request.user.UserCreationRequest;
 import com.thuanhq.ticket_master.dto.request.user.UserUpdateRequest;
 import com.thuanhq.ticket_master.dto.response.PageResponse;
@@ -18,12 +28,12 @@ import com.thuanhq.ticket_master.mapper.UserMapper;
 import com.thuanhq.ticket_master.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
+    UserRepository userRepository;
     UserMapper userMapper;
+    RoleRepository roleRepository;
 
     public UserResponse createUser(UserCreationRequest request) {
 
@@ -32,6 +42,10 @@ public class UserService {
         }
 
         User user = userMapper.toUser(request);
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(PredefinedRole.USER_ROLE);
+//        user.setRoles(roles);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -56,6 +70,7 @@ public class UserService {
     //                .build();
     //    }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<UserResponse> getAllUsers(Integer pageSize, Integer currentPage) {
 
         Pageable pageable =
@@ -65,6 +80,7 @@ public class UserService {
         return PagingUtils.toPageResponse(users, userMapper::toUserResponse);
     }
 
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getUserById(String id) {
         return userMapper.toUserResponse(
                 userRepository.findById(id).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_EXISTED)));
@@ -80,6 +96,19 @@ public class UserService {
 
         userMapper.updateUser(user, request);
 
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
+
         return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        User user = userRepository
+                .findByUsername(name)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_EXISTED));
+        return userMapper.toUserResponse(user);
     }
 }

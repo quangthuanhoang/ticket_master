@@ -2,9 +2,11 @@ package com.thuanhq.ticket_master.dto.response.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.thuanhq.ticket_master.dto.response.RoleResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,4 +31,6 @@ public class UserResponse {
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     LocalDateTime updatedAt;
+
+    Set<RoleResponse> roles;
 }

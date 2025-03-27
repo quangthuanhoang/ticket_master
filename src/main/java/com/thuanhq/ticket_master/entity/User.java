@@ -1,20 +1,20 @@
 package com.thuanhq.ticket_master.entity;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 
+import jakarta.persistence.ManyToMany;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -26,6 +26,9 @@ public class User extends AbstractEntity<String> {
     String lastName;
     String email;
     LocalDate dob;
+
+    @ManyToMany
+    Set<Role> roles;
 
     public void setPassword(String rawPassword) {
         this.password = ENCODER.encode(rawPassword);

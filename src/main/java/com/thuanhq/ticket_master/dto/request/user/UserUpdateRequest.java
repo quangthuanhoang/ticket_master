@@ -1,6 +1,8 @@
 package com.thuanhq.ticket_master.dto.request.user;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.constraints.Size;
 
@@ -20,4 +22,6 @@ public class UserUpdateRequest {
     String lastName;
     String email;
     LocalDate dob;
+
+    List<String> roles;
 }

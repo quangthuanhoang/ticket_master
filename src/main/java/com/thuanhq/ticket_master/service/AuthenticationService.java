@@ -2,12 +2,12 @@ package com.thuanhq.ticket_master.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -43,15 +44,16 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String signerKey;
 
+    PasswordEncoder passwordEncoder;
+
     public LoginResponse login(LoginRequest request) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         var user = userRepository
                 .findByUsername(request.getUsername())
-                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.UNAUTHENTICATED));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        if (!authenticated) throw new ApplicationException(ErrorCode.UNAUTHORIZED);
+        if (!authenticated) throw new ApplicationException(ErrorCode.UNAUTHENTICATED);
 
         var token = generateToken(user);
         return LoginResponse.builder().token(token).build();
@@ -67,7 +69,7 @@ public class AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.HOURS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("ThuanHQ", "This is my name")
+                .claim("scope", buildScope(user))
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -85,6 +87,14 @@ public class AuthenticationService {
 
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        return "Hoang Quang Thuan";
+        if (!user.getRoles().isEmpty()) {
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+                if (!CollectionUtils.isEmpty(role.getPermissions())) {
+                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+                }
+            });
+        }
+        return stringJoiner.toString();
     }
 }

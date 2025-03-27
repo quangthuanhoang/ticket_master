@@ -18,8 +18,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationController {
     @Autowired
-    AuthenticationService authenticationService;
 
+    AuthenticationService authenticationService;
     @PostMapping("/login")
     public APIResponse<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
         return APIResponse.<LoginResponse>builder()
