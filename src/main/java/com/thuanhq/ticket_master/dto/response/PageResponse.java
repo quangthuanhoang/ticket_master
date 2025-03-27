@@ -1,4 +1,4 @@
-package com.thuanhq.ticket_master.dto.response.user;
+package com.thuanhq.ticket_master.dto.response;
 
 import java.util.Collections;
 import java.util.List;

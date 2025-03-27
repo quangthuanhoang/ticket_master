@@ -15,7 +15,13 @@ public enum ErrorCode {
     USERNAME_INVALID(1003, "Username must be least 3 characters", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1004, "Password must be least 8 characters", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),
-    NOT_FOUND(404, "404 not found", HttpStatus.NOT_FOUND);
+    USERNAME_REQUIRED(1006, "Username is required", HttpStatus.BAD_REQUEST),
+    PASSWORD_REQUIRED(1007, "Password is required", HttpStatus.BAD_REQUEST),
+    NOT_FOUND(404, "404 not found", HttpStatus.NOT_FOUND),
+    UNAUTHORIZED(401, "Unauthorized", HttpStatus.UNAUTHORIZED),
+    PERMISSION_NOT_EXISTED(1005, "Permission not existed", HttpStatus.NOT_FOUND),
+    ROLE_NOT_EXISTED(1006, "Role not existed", HttpStatus.NOT_FOUND),
+    ;
 
     private int code;
     private String message;

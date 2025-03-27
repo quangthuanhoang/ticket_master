@@ -1,25 +1,22 @@
-package com.thuanhq.ticket_master.dto.response.user;
+package com.thuanhq.ticket_master.dto.response;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.thuanhq.ticket_master.entity.Permission;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
+@Builder
+public class RoleResponse {
     String id;
-    String username;
-    String firstName;
-    String lastName;
-    String email;
-    LocalDate dob;
+    String name;
+    String description;
+    Set<Permission> permissions;
     String createdBy;
 
     @JsonFormat(pattern = "dd/MM/yyyy")

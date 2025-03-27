@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thuanhq.ticket_master.common.PagingUtils;
 import com.thuanhq.ticket_master.dto.request.user.UserCreationRequest;
 import com.thuanhq.ticket_master.dto.request.user.UserUpdateRequest;
-import com.thuanhq.ticket_master.dto.response.user.PageResponse;
+import com.thuanhq.ticket_master.dto.response.PageResponse;
 import com.thuanhq.ticket_master.dto.response.user.UserResponse;
 import com.thuanhq.ticket_master.entity.User;
 import com.thuanhq.ticket_master.exception.ApplicationException;
@@ -34,9 +32,6 @@ public class UserService {
         }
 
         User user = userMapper.toUser(request);
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -64,7 +59,7 @@ public class UserService {
     public PageResponse<UserResponse> getAllUsers(Integer pageSize, Integer currentPage) {
 
         Pageable pageable =
-                PagingUtils.resolvePageable(currentPage, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+                PagingUtils.resolvePageable(currentPage, pageSize, Sort.by(Sort.Direction.ASC, "createdAt"));
         Page<User> users = userRepository.findAll(pageable);
 
         return PagingUtils.toPageResponse(users, userMapper::toUserResponse);
@@ -83,7 +78,6 @@ public class UserService {
         User user =
                 userRepository.findById(userId).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_EXISTED));
 
-        user.setUpdateBy("THUAN HQ");
         userMapper.updateUser(user, request);
 
         return userMapper.toUserResponse(userRepository.save(user));

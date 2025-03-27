@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import com.thuanhq.ticket_master.dto.response.user.PageResponse;
+import com.thuanhq.ticket_master.dto.response.PageResponse;
 
 public class PagingUtils {
 

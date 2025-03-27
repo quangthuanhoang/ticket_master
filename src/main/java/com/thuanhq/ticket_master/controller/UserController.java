@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.thuanhq.ticket_master.dto.request.user.UserCreationRequest;
 import com.thuanhq.ticket_master.dto.request.user.UserUpdateRequest;
 import com.thuanhq.ticket_master.dto.response.APIResponse;
-import com.thuanhq.ticket_master.dto.response.user.PageResponse;
+import com.thuanhq.ticket_master.dto.response.PageResponse;
 import com.thuanhq.ticket_master.dto.response.user.UserResponse;
 import com.thuanhq.ticket_master.service.UserService;
 
