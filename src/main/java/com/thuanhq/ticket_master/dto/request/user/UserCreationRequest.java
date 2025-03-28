@@ -2,6 +2,7 @@ package com.thuanhq.ticket_master.dto.request.user;
 
 import java.time.LocalDate;
 
+import com.thuanhq.ticket_master.validator.dob.DobConstraint;
 import jakarta.validation.constraints.Size;
 
 import lombok.AccessLevel;
@@ -23,5 +24,6 @@ public class UserCreationRequest {
     String firstName;
     String lastName;
     String email;
+    @DobConstraint(min = 18, message = "INVALID_DOB")
     LocalDate dob;
 }

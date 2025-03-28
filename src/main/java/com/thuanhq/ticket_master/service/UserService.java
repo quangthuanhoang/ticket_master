@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thuanhq.ticket_master.common.PagingUtils;
@@ -34,6 +35,7 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
 
@@ -42,6 +44,8 @@ public class UserService {
         }
 
         User user = userMapper.toUser(request);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         HashSet<String> roles = new HashSet<>();
         roles.add(PredefinedRole.USER_ROLE);
@@ -98,6 +102,7 @@ public class UserService {
 
         var roles = roleRepository.findAllById(request.getRoles());
         user.setRoles(new HashSet<>(roles));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

@@ -24,8 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITELIST_URLS = {
-        "/users", "/auth/login",
+    private static final String[] WHITELIST_URLS = {"/auth/login",
     };
 
     @Value("${jwt.signerKey}")
